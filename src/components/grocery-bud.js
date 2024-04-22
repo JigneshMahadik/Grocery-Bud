@@ -22,8 +22,8 @@ function GroceryBud(){
             alert("Please add some grocery item!");
             return;
         }
-        setLocalStorage([...localStorageItem,itemName]);
-        localStorage.setItem('list', JSON.stringify([...localStorageItem,itemName]));
+        setLocalStorage([...localStorageItem,{name : itemName, isChecked : false}]);
+        localStorage.setItem('list', JSON.stringify([...localStorageItem,{name : itemName, isChecked : false}]));
     }
     const handleDelete = (item)=>{
         const newList = localStorageItem.filter(val => val !== item);
@@ -36,6 +36,17 @@ function GroceryBud(){
     //     // localStorage.removeItem(id.target.value);
     //     console.log(item);
     // }
+    // [{name: "bread", isChecked: false}, {name: "milk", isChecked: false}]
+
+    function handleCheck(id){
+        // const list = !JSON.parse(localStorage.getItem('list'))[id].isChecked;
+        const list = JSON.parse(localStorage.getItem('list'));
+        // console.log(list);
+        list[id].isChecked = !list[id].isChecked;
+        setLocalStorage(list);
+        localStorage.setItem("list",JSON.stringify(list));
+    }
+
     return (
         <div>
             <div id="main-cont">
@@ -48,8 +59,8 @@ function GroceryBud(){
                         return (
                             <div id="item-list" key={id}>
                                 <div id="check">
-                                    <input type="checkbox" />
-                                    <h3>{item}</h3>
+                                    <input type="checkbox" checked={item.isChecked} onClick={()=>{handleCheck(id)}} />
+                                    <h3 style={{textDecoration:item.isChecked ? "line-through" : "none"}}>{item.name}</h3>
                                 </div>
                                 <button id="delete" onClick={()=>handleDelete(item)}>Delete</button>
                             </div>
